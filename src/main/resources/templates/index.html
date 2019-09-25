@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head th:replace="~{common/header}">
+    <meta charset="UTF-8">
+    <title>图像处理</title>
+	<link rel="stylesheet" href="../static/css/bootstrap.min.css"/>  
+	<script src="../static/js/jquery-3.3.1.min.js"></script>
+	<script src="../static/js/popper.min.js"></script>
+	<script src="../static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+	<div class="row" style="height: 50px;"></div>
+	<!-- 标题  -->
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col-lg-10">
+			<div class="card">
+				<div class="card-header">实现：1.打开、显示图像，保存图像到数据库，单击图像可下载；2.对一张图像进行缩放，观察其分辨率；3.降低灰度分辨率</div>
+			</div>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+	<div class="row" style="height: 10px;"></div>
+	<!-- 上传及图像列表 -->
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col-lg-10">
+			<!-- 上传 -->
+			<form id="dataForm1" method="post" action=""   enctype="'multipart/form-data'">
+				<div class="form-group row">
+					<div class="col-sm-2 ">
+						<input type="button" class="btn btn-primary form-control" value="上传" id="uploadButton"/>
+					</div>
+					<div class="col-sm-10">
+						<input id="filename" type="file" class="form-control"/>
+					</div>
+				</div>
+			</form>
+
+			<!-- 图像列表 -->
+			<form id="dataForm" method="post">
+				<table class="table" style="overflow-x:auto; overflow-y:auto;border: 1px solid #cccfc9;">
+					<thead>
+					<tr class="table-secondary">
+						<th scope="col" width="50">选择</th>
+						<th scope="col" width="100">名称</th>
+						<th scope="col" width="100">地址</th>
+						<th scope="col" width="70">创建人</th>
+						<th scope="col" width="130">创建时间</th>
+						<th scope="col" width="70">更新人</th>
+						<th scope="col" width="130">更新时间</th>
+						<th scope="col" width="100">缩放|降低灰度</th>
+						<th scope="col" width="100">灰度拉伸</th>
+						<th scope="col" width="100">直方图均衡</th>
+						<th scope="col" width="100">操作</th>
+					</tr>
+					</thead>
+					<tbody th:remove="all-but-first">
+					<tr th:each="data : ${datas.content}" th:object="${data}">
+						<td scope="row"><input type="checkbox" name="ids" th:value="*{id}"/></td>
+						<td><a download="true" th:href="${#request.getContextPath()} + *{downUrl}" target="_blank" th:text="*{imgName}">url</a></td>
+						<td >
+							<a th:href="${#request.getContextPath()} + *{downUrl}" download="true">
+								<img th:src="${#request.getContextPath()} + *{downUrl}" height="50px">
+							</a>
+						</td>
+						<td th:text="*{createdBy}">2018-01-01 00:00:00</td>
+						<td th:text="*{createdAt}">2018-01-01 00:00:00</td>
+						<td th:text="*{updatedBy}">2018-01-01 00:00:00</td>
+						<td th:text="*{updatedAt}">2018-01-01 00:00:00</td>
+						<td><a th:href="@{/operate/} + *{id}" target="_blank">缩放|降低灰度</a></td>
+						<td><a th:href="@{/grayLineView/} + *{id}" target="_blank">灰度拉伸</a></td>
+						<td><a th:href="@{/equalizeHistView/} + *{id}" target="_blank">直方图均衡</a></td>
+						<td><a th:href="@{/imgView/} + *{id}" target="_blank">操作</a></td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+
+	<!-- 列表分页组件 -->
+	<div class="row">
+		<div class="col-lg-4"></div>
+		<nav class="col-lg-1" th:replace="~{common/page::page('/')}">
+			<ul class="pagination">
+				<li class="page-item">
+					<a class="page-link" href="#" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<li class="page-item"><a class="page-link" href="#">1</a></li>
+				<li class="page-item"><a class="page-link" href="#">2</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item">
+					<a class="page-link" href="#" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+	<!-- 图像显示 -->
+	<div class="form-group row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+			<img id="coverImg" src="" height="200px"/>
+		</div>
+		<div class="col-sm-1"></div>
+	</div>
+
+	<div class="row" style="height: 20px;"></div>
+
+</div>
+<script type="text/javascript">
+	$(window).on('load', function () {
+		$("#uploadButton").click(function() {
+			var formData = new FormData();
+			var filename = $("#filename")[0].files[0];
+			formData.append("filename", filename);
+			$.ajax({
+				url: imgCtx + '/upload',
+				data: formData,
+				type: 'POST',
+				contentType: false,
+				processData: false,
+				success: function(obj){
+					// $("#coverPath").val(obj);
+					$("#coverImg").attr("src", imgCtx + obj);
+				}
+			});
+		});
+
+	});
+
+</script>
+
+</body>
+</html>

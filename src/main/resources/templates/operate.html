@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{common/header}">
+    <meta charset="UTF-8">
+    <title>图书管理系统</title>
+	<link rel="stylesheet" href="../../static/css/bootstrap.min.css"/>  
+	<script src="../../static/js/jquery-3.3.1.min.js"></script>
+	<script src="../../static/js/popper.min.js"></script>
+	<script src="../../static/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="row" style="height: 30px;"></div>
+
+	<div class="row" style="height: 20px;"></div>
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col-lg-10">
+			<div class="card">
+				<div class="card-header">
+					<form id="dataForm1" method="post" action=""   enctype="'multipart/form-data'">
+						<div class="form-group row">
+							<div class="col-sm-2 ">
+								<input type="button" class="btn btn-primary form-control" value="放大" id="zoomIn"/>
+							</div>
+							<div class="col-sm-2 ">
+								<input type="button" class="btn btn-primary form-control" value="缩小" id="zoomOut"/>
+							</div>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" name="name" id="zoom" value="10%"/>
+								<input type="text" class="form-control" style="display:none" name="name" id="id" th:value="*{image.id}"/>
+							</div>
+							<div class="col-sm-2 ">
+							</div>
+							<div class="col-sm-2 ">
+								<input type="button" class="btn btn-primary form-control" value="灰度处理" id="grey"/>
+							</div>
+							<script>
+								$("#zoomIn").click(function() {
+									zoomEvent('');
+								});
+                                $("#zoomOut").click(function() {
+                                    zoomEvent('-');
+                                });
+								$("#grey").click(function() {
+									var formData = new FormData();
+									var id = $("#id").val();
+									formData.append("id", id);
+									$.ajax({
+										url: imgCtx +'/adjustGray',
+										data: formData,
+										type: 'POST',
+										contentType: false,
+										processData: false,
+										success: function(obj){
+											var strs= new Array();
+											strs=obj.split(",");
+											var url0=strs[0]+"?s="+ (new Date()).getTime();
+											var url1=strs[1]+"?s="+ (new Date()).getTime();
+											var url2=strs[2]+"?s="+ (new Date()).getTime();
+											var url3=strs[3]+"?s="+ (new Date()).getTime();
+											$("#img0").attr("src", imgCtx + url0);
+											$("#img1").attr("src", imgCtx + url1);
+											$("#img2").attr("src", imgCtx + url2);
+											$("#img3").attr("src", imgCtx + url3);
+
+											$("#imgScale").hide();
+											$("#imgGrep").show();
+											$("#imgGrep1").show();
+											$("#imgGrep2").show();
+											$("#imgGrep3").show();
+										}
+									});
+								});
+
+								var zoomEvent = function(reg){
+									var formData = new FormData();
+									var zoom = reg + $("#zoom").val();
+									formData.append("zoom", zoom);
+									var id = $("#id").val();
+									formData.append("id", id);
+									$.ajax({
+										url:imgCtx + '/scale',
+										data: formData,
+										type: 'POST',
+										contentType: false,
+										processData: false,
+										success: function(obj){
+											// $("#coverPath").val(obj);
+                                            var url=obj+"?s="+ (new Date()).getTime();
+                                            $("#coverImg").attr("src", imgCtx + url);
+                                            $("#coverImg1").attr("src", imgCtx + url);
+
+											$("#imgScale").show();
+											$("#imgGrep").hide();
+											$("#imgGrep1").hide();
+											$("#imgGrep2").hide();
+											$("#imgGrep3").hide();
+										}
+									});
+
+								}
+							</script>
+						</div>
+					</form>
+
+				</div>
+
+				<div class="card-body">
+
+                    <!-- 图像显示 -->
+                    <div class="form-group row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10">
+                            <img id="coverImg1" th:src="${#request.getContextPath()} + *{image.downUrl}" height="200"/>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+
+					<!-- 图像显示 -->
+					<div class="form-group row" id="imgScale" style="display:none">
+						<div class="col-sm-1"></div>
+						<div class="col-sm-10">
+							<img id="coverImg" th:src="${#request.getContextPath()} + *{image.downUrl}"/>
+						</div>
+						<div class="col-sm-1"></div>
+					</div>
+
+					<!-- 图像显示 -->
+					<div class="form-group row" id = "imgGrep2" style="display:none">
+						<label class="col-sm-6 col-form-label">256</label>
+						<label class="col-sm-6 col-form-label">16</label>
+					</div>
+					<div class="form-group row" id = "imgGrep" style="display:none">
+						<div class="col-sm-6">
+							<img id="img0" src="" height="200"/>
+						</div>
+						<div class="col-sm-6">
+							<img id="img1" src="" height="200"/>
+						</div>
+					</div>
+					<div class="row" style="height: 30px;"></div>
+					<!-- 图像显示 -->
+					<div class="form-group row" id = "imgGrep3" style="display:none">
+						<label class="col-sm-6 col-form-label">8</label>
+						<label class="col-sm-6 col-form-label">4</label>
+					</div>
+					<div class="form-group row" id = "imgGrep1" style="display:none">
+						<div class="col-sm-6">
+							<img id="img2" src="" height="200"/>
+						</div>
+						<div class="col-sm-6">
+							<img id="img3" src="" height="200"/>
+						</div>
+					</div>
+
+
+				</div>
+
+
+
+			</div>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+	<div class="row" style="height: 20px;"></div>
+	<div class="row">
+		<div class="col-lg-12" style="text-align: center;">
+			Copyright © 2019-2022 dengrd All rights reserved.
+		</div>
+	</div>
+	<div class="row" style="height: 20px;"></div>
+</div>
+
+
+</body>
+</html>
