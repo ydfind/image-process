@@ -5,7 +5,7 @@ import com.ydfind.image.common.Constant;
 import com.ydfind.image.entity.ImageEntity;
 import com.ydfind.image.service.ImageService;
 import com.ydfind.image.util.FileUtils;
-import com.ydfind.image.util.ImageProcess;
+import com.ydfind.image.biz.ImageBaseBiz;
 import com.ydfind.image.util.ImgUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
@@ -63,7 +62,6 @@ public class ImageController {
      * 上传，并返回图像链接
      * @param uploadFile 上传的文件
      * @param response 响应参数
-     * @throws Exception 异常
      */
     @RequestMapping("/upload")
     public void upload(@RequestParam("filename") MultipartFile uploadFile, HttpServletResponse response) {
@@ -277,7 +275,7 @@ public class ImageController {
             // 进行灰度拉伸
             log.info("灰度拉伸 结果文件：{}", trgFilename);
             BufferedImage trgImg = new BufferedImage(srcImg.getWidth(), srcImg.getHeight(), BufferedImage.TYPE_INT_RGB);
-            ImageProcess.grayLineTransformation(srcImg, trgImg, (gray) -> {
+            ImageBaseBiz.grayLineTransformation(srcImg, trgImg, (gray) -> {
                 if(gray < srcStart){
                     return trgStart;
                 }else if(gray > srcEnd){
@@ -333,7 +331,7 @@ public class ImageController {
             String trgFilename = filename.replace(fileExcludeExtName, changeName);
             // 进行直方图均衡
             log.info("直方图均衡 结果文件：{}", trgFilename);
-            ImageProcess.equalizeHist(filename, trgFilename);
+            ImageBaseBiz.equalizeHist(filename, trgFilename);
             // 结果保存数据库
             ImageEntity equalizeImg;
             String trgUrl = image.getUrl().replace(fileExcludeExtName, changeName);

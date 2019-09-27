@@ -1,5 +1,6 @@
 package com.ydfind.image.util;
 
+import com.ydfind.image.biz.ImageColorTraverse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;

@@ -1,7 +1,6 @@
-package com.ydfind.image.util;
+package com.ydfind.image.biz;
 
-import com.sun.imageio.plugins.common.ImageUtil;
-import org.jcp.xml.dsig.internal.DigesterOutputStream;
+import com.ydfind.image.util.ImgUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,7 +12,7 @@ import java.io.IOException;
  * @author ydfind
  * @date 2019.9.20
  */
-public class ImageProcess {
+public class ImageBaseBiz {
 
     /**
      * 图像灰度 线性处理

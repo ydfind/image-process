@@ -1,4 +1,4 @@
-package com.ydfind.image.util;
+package com.ydfind.image.biz;
 
 /**
  * 图像灰度处理
