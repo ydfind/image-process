@@ -36,6 +36,7 @@ public class NoiseController {
     private ImageService imageService;
 
 
+
     /**
      * 打开 直方图均衡 界面
      * @param imageId 图像id
