@@ -1,6 +1,6 @@
 package com.ydfind.image.util;
 
-import com.ydfind.image.biz.ImageBaseBiz;
+import com.ydfind.image.biz.util.ImageProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class ImgUtilsTest {
         srcStart = colorExtremeValues[0];
         srcEnd = colorExtremeValues[1];
         log.info("处理({},{}) -> ({},{})", srcStart, srcEnd, trgStart, trgStart + trgRange);
-        ImageBaseBiz.grayLineTransformation(src, trg, (gray) -> {
+        ImageProcessor.grayLineTransformation(src, trg, (gray) -> {
             if(gray < srcStart){
                 return trgStart;
             }else if(gray > srcEnd){
@@ -66,14 +66,14 @@ public class ImgUtilsTest {
     public void testEqualizeHist() throws IOException {
         String src = "/imgLib/对数.png";
         String trg = "/imgLib/对数-equalizeHist-out.png";
-        ImageBaseBiz.equalizeHist(src, trg);
+        ImageProcessor.equalizeHist(src, trg);
     }
 
     @Test
     public void testLogarithmTransformation() throws IOException {
         String src = "/imgLib/logarithm.png";
         String trg = "/imgLib/logarithm-out1.png";
-        ImageBaseBiz.logarithmTransformation(src, trg, 1);
+        ImageProcessor.logarithmTransformation(src, trg, 1);
 
 //        String trg1 = "/imgLib/对数-out1.png";
 //        ImageProcess.logarithmTransformation(trg, trg1);

@@ -1,4 +1,4 @@
-package com.ydfind.image.biz;
+package com.ydfind.image.biz.util;
 
 import com.ydfind.image.util.ImgUtils;
 
@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author ydfind
  * @date 2019.9.20
  */
-public class ImageBaseBiz {
+public class ImageProcessor {
 
     /**
      * 图像灰度 线性处理

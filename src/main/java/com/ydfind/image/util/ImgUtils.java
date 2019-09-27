@@ -1,6 +1,6 @@
 package com.ydfind.image.util;
 
-import com.ydfind.image.biz.ImageColorTraverse;
+import com.ydfind.image.biz.util.ImageColorTraverse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -299,6 +299,23 @@ public class ImgUtils {
         }
         String name = excludeExt.substring(index + 1);
         return name;
+    }
+
+    /**
+     * 获取图像指定位置的grb
+     * @param img 图像
+     * @param x x位置
+     * @param y y位置
+     * @return agrb颜色值
+     */
+    public static int[] getChannelColor(BufferedImage img, int x, int y){
+        int color = img.getRGB(x, y);
+        int[] channels = new int[4];
+        for(int k = ImgUtils.COLOR_CHANNEL_COUNT - 1; k >= 0; k--){
+            channels[k] = color & 0xff;
+            color >>= 8;
+        }
+        return channels;
     }
 
     public static void main(String[] args){

@@ -3,7 +3,7 @@ package com.ydfind.image.controller;
 import com.ydfind.image.common.Constant;
 import com.ydfind.image.entity.ImageEntity;
 import com.ydfind.image.service.ImageService;
-import com.ydfind.image.biz.ImageBaseBiz;
+import com.ydfind.image.biz.util.ImageProcessor;
 import com.ydfind.image.util.ImgUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class LogarithmController {
             // 处理
             log.info("对数变换 结果文件：{}", trgFilename);
             double mult = Double.valueOf(param1);
-            ImageBaseBiz.logarithmTransformation(filename, trgFilename, mult);
+            ImageProcessor.logarithmTransformation(filename, trgFilename, mult);
             // 结果保存数据库
             ImageEntity entity;
             String trgUrl = image.getUrl().replace(fileExcludeExtName, changeName);

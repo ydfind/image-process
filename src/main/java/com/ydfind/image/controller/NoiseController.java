@@ -4,7 +4,7 @@ package com.ydfind.image.controller;
 import com.ydfind.image.common.Constant;
 import com.ydfind.image.entity.ImageEntity;
 import com.ydfind.image.service.ImageService;
-import com.ydfind.image.biz.ImageBaseBiz;
+import com.ydfind.image.biz.util.ImageProcessor;
 import com.ydfind.image.util.ImgUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +51,6 @@ public class NoiseController {
         return "equalizeHistView";
     }
 
-
-
     /**
      * 直方图均衡
      * @param id 图像id
@@ -69,7 +67,7 @@ public class NoiseController {
             String trgFilename = filename.replace(fileExcludeExtName, changeName);
             // 进行直方图均衡
             log.info("直方图均衡 结果文件：{}", trgFilename);
-            ImageBaseBiz.equalizeHist(filename, trgFilename);
+            ImageProcessor.equalizeHist(filename, trgFilename);
             // 结果保存数据库
             ImageEntity equalizeImg;
             String trgUrl = image.getUrl().replace(fileExcludeExtName, changeName);

@@ -30,4 +30,9 @@ public class Constant {
     private static boolean isWindows() {
         return System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1;
     }
+    /********************************** 测试 *****************************************************/
+    /**
+     * 保存上传文件的目录
+     */
+    public final static String TEST_IMAGE_DIR = isWindows() ? "D:/imgLib/" : "/imgLib/";
 }

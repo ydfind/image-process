@@ -2,7 +2,7 @@ package com.ydfind.image.service;
 
 import com.ydfind.image.ImageApp;
 import com.ydfind.image.entity.ImageEntity;
-import com.ydfind.image.biz.ImageBaseBiz;
+import com.ydfind.image.biz.util.ImageProcessor;
 import com.ydfind.image.util.ImgUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -69,7 +69,7 @@ public class ImageServiceTest {
         srcStart = colorExtremeValues[0];
         srcEnd = colorExtremeValues[1];
         log.info("处理({},{}) -> ({},{})", srcStart, srcEnd, trgStart, trgStart + trgRange);
-        ImageBaseBiz.grayLineTransformation(src, trg, (gray) -> {
+        ImageProcessor.grayLineTransformation(src, trg, (gray) -> {
             if(gray < srcStart){
                 return trgStart;
             }else if(gray > srcEnd){
@@ -91,6 +91,6 @@ public class ImageServiceTest {
         src = file.getPath();
         trg = src.replace("equalizeHist.png", "equalizeHist_out.png");
 
-        ImageBaseBiz.equalizeHist(src, trg);
+        ImageProcessor.equalizeHist(src, trg);
     }
 }
