@@ -37,6 +37,7 @@ public class NoiseController {
 
 
 
+
     /**
      * 打开 直方图均衡 界面
      * @param imageId 图像id
@@ -49,6 +50,7 @@ public class NoiseController {
         model.addAttribute("image", image);
         return "equalizeHistView";
     }
+
 
 
     /**
