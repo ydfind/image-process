@@ -18,37 +18,28 @@ import java.util.Random;
 @Service
 public class GaussianNoiseProcessor extends ImageProcessor {
 
-    public static double generateGaussianNoise() {
-//        double V1, V2, S;
-//        double X;
-//        double U1,U2;
-//        Random random = new Random();
-//        do {
-//            U1 = (double)random.nextInt(256);
-//            U2 = (double)random.nextInt(256);
-//
-//            V1 = 2 * U1 - 1;
-//            V2 = 2 * U2 - 1;
-//            S = V1 * V1 + V2 * V2;
-//        } while(S >= 1 || S == 0);
-//
-//        X = V1 * Math.sqrt(-2 * Math.log(S) / S);
-//        return X;
-
-
-        double u1, u2;
-        Random random = new Random();
-        do {
-            u1 = (double)random.nextInt(256) / 256;
-            u2 = (double)random.nextInt(256) / 256;
-//            u1 = rand() * (1.0 / RAND_MAX);
-//            u2 = rand() * (1.0 / RAND_MAX);
-        } while (u1 <= Double.MIN_NORMAL);
-        //flag为真构造高斯随机变量x
-//        double z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2 * CV_PI * u2);
-//        z1 = sqrt(-2.0 * log(u1)) * sin(2 * CV_PI * u2);
-//        return z0;
-        return 1.0;
+    /**
+     *
+     * @param flag 第一次调用应该为false
+     * @param z1
+     * @return
+     */
+    public static double generateGaussianNoise(Random random, Boolean flag, Double z1) {
+        flag = !flag;
+        if (!flag) {
+            return z1;
+        }
+        double z0;
+        double u1;
+        double u2;
+        do
+        {
+            u1 = random.nextFloat();
+            u2 = random.nextFloat();
+        } while (u1 <= Double.MIN_VALUE);
+        z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        z1 = Math.sqrt(-2.0 * Math.log(u1))* Math.sin(2 * Math.PI * u2);
+        return z0;
     }
 
 
@@ -60,12 +51,16 @@ public class GaussianNoiseProcessor extends ImageProcessor {
      * @param param 信噪比
      */
     public static void addGaussianNoise(BufferedImage srcImg, BufferedImage trgImg, double param){
+        Boolean flag = false;
+        Double z1 = 0.0;
+        double z0;
+        Random random = new Random();
         for(int x = 0; x < srcImg.getWidth(); x++){
             for(int y= 0; y < srcImg.getHeight(); y++){
-                double k1 = param * generateGaussianNoise();
+                z0 = generateGaussianNoise(random, flag, z1);
                 int[] channels = ImgUtils.getChannelColor(srcImg, x, y);
                 for(int k = ImgUtils.COLOR_CHANNEL_COUNT - 1; k > 0; k--){
-                    channels[k] += new Double(k1).intValue();
+                    channels[k] += new Double(z0 * param).intValue();
                     channels[k] = channels[k] > 255 ? 255 : channels[k] < 0 ? 0 : channels[k];
                 }
                 int color = ImgUtils.colorToRgb(channels);

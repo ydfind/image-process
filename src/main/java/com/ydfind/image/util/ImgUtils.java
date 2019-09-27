@@ -318,6 +318,20 @@ public class ImgUtils {
         return channels;
     }
 
+    /**
+     * 获取图像指定位置的grb
+     * @param color 颜色值
+     * @return agrb颜色值
+     */
+    public static int[] getChannelColor(int color){
+        int[] channels = new int[4];
+        for(int k = ImgUtils.COLOR_CHANNEL_COUNT - 1; k >= 0; k--){
+            channels[k] = color & 0xff;
+            color >>= 8;
+        }
+        return channels;
+    }
+
     public static void main(String[] args){
         String path = "/update/image.exe";
         System.out.println(getImgNameExcludeExt(path));
