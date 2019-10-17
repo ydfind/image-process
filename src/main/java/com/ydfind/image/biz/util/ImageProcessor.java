@@ -162,4 +162,52 @@ public class ImageProcessor {
         });
     }
 
+    /**
+     * 对图像进行黑白化
+     * @param srcImg 原图像
+     * @param trgImg 目标图像
+     */
+    public static void processBlackAndWhite(BufferedImage srcImg, BufferedImage trgImg) {
+        ImgUtils.traversePngColor(srcImg, (x, y, color, channels) -> {
+            int newColor = new Double((0.3 * channels[1] + 0.59 * channels[2] + 0.11 * channels[3])).intValue();
+            channels[1] = newColor;
+            channels[2] = newColor;
+            channels[3] = newColor;
+            newColor = ImgUtils.colorToRgb(channels);
+            trgImg.setRGB(x, y, newColor);
+        });
+    }
+
+    /**
+     * 对图像进行黑白化
+     * @param srcFilename 原图像
+     * @param trgFilename 目标图像
+     * @throws IOException 文件读取报错
+     */
+    public static void processBlackAndWhite(String srcFilename, String trgFilename) throws IOException {
+        BufferedImage srcImg = ImageIO.read(new File(srcFilename));
+        BufferedImage trgImg = new BufferedImage(srcImg.getWidth(), srcImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        processBlackAndWhite(srcImg, trgImg);
+        ImgUtils.saveImage(trgFilename, trgImg);
+    }
+
+    /**
+     * 计算图像的灰度值数组，灰度值=0.3r + 0.59g + 0.11b
+     * @param img
+     * @return
+     */
+    public static int[][] getImageGray(BufferedImage img){
+        int[][] result = new int[img.getWidth()][img.getWidth()];
+        ImgUtils.traversePngColor(img, (x, y, color, channels) -> {
+            int newColor = new Double((0.3 * channels[1] + 0.59 * channels[2] + 0.11 * channels[3])).intValue();
+            result[x][y] = newColor;
+        });
+        return result;
+    }
+
+    public static BufferedImage copyImage(BufferedImage img){
+        BufferedImage res = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+        res.setData(img.getData());
+        return res;
+    }
 }

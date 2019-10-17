@@ -78,4 +78,5 @@ public class ImgUtilsTest {
 //        String trg1 = "/imgLib/对数-out1.png";
 //        ImageProcess.logarithmTransformation(trg, trg1);
     }
+
 }
