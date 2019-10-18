@@ -66,6 +66,8 @@ public class ImgUtilsTest {
     public void testEqualizeHist() throws IOException {
         String src = "/imgLib/对数.png";
         String trg = "/imgLib/对数-equalizeHist-out.png";
+        src = "D:\\imgLib\\傅里叶\\bltp128x64-HLPF-FOURIER-5-0.5-2.0.png";
+        trg = "D:\\imgLib\\傅里叶\\bltp128x64-HLPF-FOURIER-5-0.5-2.0-equalize.png";
         ImageProcessor.equalizeHist(src, trg);
     }
 

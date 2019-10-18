@@ -123,11 +123,33 @@ public class DftProcessor extends ImageProcessor {
     }
 
     /**
-     * 中值滤波器
+     * 傅里叶 反变换 并保存
      * @param srcImg 原图
      * @param trgImg 目标图像
+     * @param dest 频率谱数组
      */
-    public static void process(BufferedImage srcImg, BufferedImage trgImg, BufferedImage newSrcImg, int threshold){
+    public static void processAndSaveDftReverse(BufferedImage srcImg, BufferedImage trgImg, MyComplex[][] dest){
+        int w = srcImg.getWidth();
+        int h = srcImg.getHeight();
+        // 进行反变换
+        MyComplex[][] newSrc = new MyComplex[w][h];
+        processDftReverse(dest, newSrc, w, h);
+        int[][] pixels = new int[w][h];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                int scope = new Double(newSrc[i][j].abs()).intValue();
+                pixels[i][j] = scope;
+            }
+        }
+        saveToImage(srcImg, trgImg, pixels);
+    }
+
+    /**
+     * 离散傅里叶 正变换
+     * @param srcImg 原图像
+     * @return 处理后傅里叶 频率坐标
+     */
+    public static MyComplex[][] processDftForward(BufferedImage srcImg){
         int w = srcImg.getWidth();
         int h = srcImg.getHeight();
         // 根据原图生成二维数组
@@ -142,20 +164,22 @@ public class DftProcessor extends ImageProcessor {
         // 进行傅里叶正变换
         MyComplex[][] dest = new MyComplex[w][h];
         processDftForward(src, dest, w, h);
-        // 提取频谱图像-幅度谱
+        return dest;
+    }
+
+    /**
+     * 中值滤波器
+     * @param srcImg 原图
+     * @param trgImg 目标图像
+     */
+    public static void process(BufferedImage srcImg, BufferedImage trgImg, BufferedImage newSrcImg, int threshold){
+        // 傅里叶正变换
+        MyComplex[][] dest = processDftForward(srcImg);
+        // 根据截止频率过滤dest，并保存傅里叶幅度图片
         int[][] newPixels = extractScope(dest, threshold);
         saveToImage(srcImg, trgImg, newPixels);
-
-        // 进行反变换
-        MyComplex[][] newSrc = new MyComplex[w][h];
-        processDftReverse(dest, newSrc, w, h);
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                int scope = new Double(newSrc[i][j].abs()).intValue();
-                newPixels[i][j] = scope;
-            }
-        }
-        saveToImage(srcImg, newSrcImg, newPixels);
+        // 傅里叶反变换，并保存图片
+        processAndSaveDftReverse(srcImg, newSrcImg, dest);
     }
 
     /**
@@ -200,7 +224,7 @@ public class DftProcessor extends ImageProcessor {
      * @param trgImg 目标图像
      * @param pixels 像素值
      */
-    private static void saveToImage(BufferedImage srcImg, BufferedImage trgImg, int[][] pixels){
+    public static void saveToImage(BufferedImage srcImg, BufferedImage trgImg, int[][] pixels){
         int w = pixels.length;
         int h = pixels[0].length;
         for (int i = 0; i < w; i++) {

@@ -89,7 +89,7 @@ public class ImageServiceTest {
         Resource resource = new ClassPathResource(src);
         File file = resource.getFile();
         src = file.getPath();
-        trg = src.replace("equalizeHist.png", "equalizeHist_out.png");
+        trg = src.replace(".png", "equalizeHist_out.png");
 
         ImageProcessor.equalizeHist(src, trg);
     }

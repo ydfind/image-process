@@ -32,6 +32,14 @@ public class MyComplex {
     }
 
     /**
+     * 平方
+     * @return real * real + imaginary * imaginary
+     */
+    public double power()   {
+        return real * real + imaginary * imaginary;
+    }
+
+    /**
      * 反正切
      * @return atan(real/imaginary);
      */
