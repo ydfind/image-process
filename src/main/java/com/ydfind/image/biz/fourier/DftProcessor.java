@@ -1,6 +1,7 @@
-package com.ydfind.image.biz.util;
+package com.ydfind.image.biz.fourier;
 
 import com.ydfind.image.biz.fft.MyComplex;
+import com.ydfind.image.biz.util.ImageProcessor;
 import com.ydfind.image.util.ImgUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -67,8 +68,7 @@ public class DftProcessor extends ImageProcessor {
                 total = total.plus(getDftForwardItem(i, j, u, v, w, h).times(src[i][j].getReal()));
             }
         }
-        return total.times(1.0 / (w * h * 1.0));
-//        return total;
+        return total;
     }
 
     /**
@@ -99,9 +99,10 @@ public class DftProcessor extends ImageProcessor {
      * @param h 高度
      */
     private static void processDftForward(MyComplex src[][], MyComplex desc[][], int w, int h){
+        double param = 1.0 / (w * h * 1.0);
         for(int i = 0; i < w; i++){
             for(int j = 0; j < h; j++){
-                desc[i][j] = calcUv(src, i, j, w, h);
+                desc[i][j] = calcUv(src, i, j, w, h).times(param);
             }
         }
     }
@@ -171,17 +172,18 @@ public class DftProcessor extends ImageProcessor {
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 int scope = new Double(complexes[i][j].abs()).intValue();
-                // 显示更明显的图像
-//                scope = scope * w * h / 100;
                 int x = i < cenX ? i + cenX : i - cenX;
                 int y = j < cenY ? j + cenY : j - cenY;
-                pixels[x][y] = scope;
                 // 过滤
                 if(scope > threshold){
 //                    pixels[x][y] = threshold;
 //                    complexes[i][j].times(threshold / scope);
                     pixels[x][y] = 0;
                     complexes[i][j] = new MyComplex(0, 0);
+                }else{
+                    // 显示更明显的图像
+                    scope = scope * 100;
+                    pixels[x][y] = scope;
                 }
 //                if(scope < threshold){
 //                    pixels[x][y] = 0;

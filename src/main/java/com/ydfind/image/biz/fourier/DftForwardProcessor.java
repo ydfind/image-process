@@ -1,26 +1,29 @@
-package com.ydfind.image.biz.util;
+package com.ydfind.image.biz.fourier;
 
 import com.ydfind.image.biz.fft.MyComplex;
+import com.ydfind.image.biz.util.ImageProcessor;
 import com.ydfind.image.util.ImgUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * DFT傅里叶反变换：目前默认传入的是黑白图片
+ * DFT傅里叶正变换：目前默认传入的是黑白图片
  * @author ydfind
  * @date 2019.10.17
  */
 @Component
 @Service
-public class DftReverseProcessor extends ImageProcessor {
+public class DftForwardProcessor extends ImageProcessor {
 
     /**
-     * 离散傅里叶 反变换
+     * 离散傅里叶 正变换
      * @param x 图像x
      * @param y 图像y
      * @param u 变换后x
@@ -29,13 +32,13 @@ public class DftReverseProcessor extends ImageProcessor {
      * @param h 图像宽度
      * @return 计算结果
      */
-    private static MyComplex getDftItem(int x, int y, int u, int v, int w, int h){
-        MyComplex complex = new MyComplex(0, Math.PI * 2 * (u * x * 1.0 / w + v * y * 1.0 / h));
+    private static MyComplex getDftForwardItem(int x, int y, int u, int v, int w, int h){
+        MyComplex complex = new MyComplex(0, Math.PI * -2 * (u * x * 1.0 / w + v * y * 1.0 / h));
         return complex.exp();
     }
 
     /**
-     * 计算傅里叶 反变换 中u，v出复数坐标
+     * 计算傅里叶 正变换 中u，v出复数坐标
      * @param src 原图
      * @param u 傅里叶正变换后坐标x
      * @param v 傅里叶正变换后坐标y
@@ -43,28 +46,29 @@ public class DftReverseProcessor extends ImageProcessor {
      * @param h 图像高度
      * @return 计算结果
      */
-    private static MyComplex calcXy(MyComplex src[][], int u, int v, int w, int h){
+    private static MyComplex calcUv(MyComplex src[][], int u, int v, int w, int h){
         MyComplex total = new MyComplex();
         for(int i = 0; i < w; i++){
             for(int j = 0; j < h; j++){
                 // 原图像灰度值保存在实部中，虚部默认为0
-                total = total.plus(getDftItem(i, j, u, v, w, h).times(src[i][j].getReal()));
+                total = total.plus(getDftForwardItem(i, j, u, v, w, h).times(src[i][j].getReal()));
             }
         }
-        return total;
+        return total.times(1.0 / (w * h * 1.0));
+//        return total;
     }
 
     /**
-     * 根据原二维图像，进行傅里叶反变换
+     * 根据原二维图像，进行傅里叶正变换
      * @param src 原图
      * @param desc 傅里叶变换后 结果
      * @param w 宽度
      * @param h 高度
      */
-    private static void processDftReverse(MyComplex src[][], MyComplex desc[][], int w, int h){
+    private static void processDftForward(MyComplex src[][], MyComplex desc[][], int w, int h){
         for(int i = 0; i < w; i++){
             for(int j = 0; j < h; j++){
-                desc[i][j] = calcXy(src, i, j, w, h);
+                desc[i][j] = calcUv(src, i, j, w, h);
             }
         }
     }
@@ -88,18 +92,19 @@ public class DftReverseProcessor extends ImageProcessor {
                 src[i][j] = new MyComplex(pixels[i][j], 0);
             }
         }
-        // 进行傅里叶反变换
-        processDftReverse(src, dest, w, h);
+        // 进行傅里叶正变换
+        processDftForward(src, dest, w, h);
         // 提取频谱图像-幅度谱
         int[][] newPixels = new int[w][h];
         int cenX = w / 2;
         int cenY = h / 2;
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                int x;
-                int y;
-                int scope = new Double(dest[i][j].getReal()).intValue();
+                int x = 0;
+                int y = 0;
+                int scope = new Double(dest[i][j].abs()).intValue();
                 // 显示更明显的图像
+//                scope = scope * w * h / 100;
                 if (scope > 255) {
                     scope = 255;
                 }

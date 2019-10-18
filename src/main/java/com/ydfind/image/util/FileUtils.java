@@ -276,20 +276,37 @@ public class FileUtils {
 
     /**
      * 获取文件名的后缀
-     * @param fileName
-     * @return
+     * @param filename 文件名
+     * @return 带.文件类型
      */
-    public static String getSuffix(String fileName) {
-        if(fileName.indexOf(FILE_JOIN_MARK) == -1) {
+    public static String getSuffix(String filename) {
+        if(filename.indexOf(FILE_JOIN_MARK) == -1) {
             return "";
         }
-        int dotIndex = fileName.indexOf(FILE_JOIN_MARK);
-        String result = fileName.substring(dotIndex, fileName.length());
+        int dotIndex = filename.lastIndexOf(FILE_JOIN_MARK);
+        String result = filename.substring(dotIndex);
+        return result;
+    }
+
+    /**
+     * 文件名称 添加后缀
+     * @param filename 原文件名称 old.png
+     * @param suffix 后缀 -suffix
+     * @return 新文件名称old-suffix.png
+     */
+    public static String suffixToFilename(String filename, String suffix){
+        if(filename.indexOf(FILE_JOIN_MARK) == -1) {
+            return "";
+        }
+        int dotIndex = filename.lastIndexOf(FILE_JOIN_MARK);
+        String result = filename.substring(0, dotIndex) + suffix + filename.substring(dotIndex, filename.length());
         return result;
     }
 
     public static void main(String[] args) {
         System.out.println(FileUtils.getSuffix("abc"));
-        System.out.println(FileUtils.getSuffix("abc.png"));
+        System.out.println(FileUtils.getSuffix("abc.b.c.png"));
+
+        System.out.println(FileUtils.suffixToFilename("abc.b.c.png", "-suffix"));
     }
 }

@@ -1,4 +1,4 @@
-package com.ydfind.image.biz.util;
+package com.ydfind.image.biz.fourier;
 
 /**
  * 傅里叶 遍历处理接口
