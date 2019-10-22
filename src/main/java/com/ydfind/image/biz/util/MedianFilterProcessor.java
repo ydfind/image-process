@@ -66,8 +66,7 @@ public class MedianFilterProcessor extends ImageProcessor {
         int k = 0;
         for(int i = -1; i < 2; i++){
             for(int j = -1; j < 2; j++){
-//                arr[k++] = img.getRGB(getInRange(x + i, 0, w),getInRange( y + j,0, h ));
-                if(x < 0 || x > w || y < 0 || y > h){
+                if(x < 0 || x >= w || y < 0 || y >= h){
                     arr[k++] = -1;
                 }else{
                     arr[k++] = img.getRGB(x, y);

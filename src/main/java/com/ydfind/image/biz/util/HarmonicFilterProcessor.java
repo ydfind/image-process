@@ -38,7 +38,7 @@ public class HarmonicFilterProcessor extends ImageProcessor {
                         if(x < 0 || x >= w || y < 0 || y >= h ){
                             continue;
                         }else {
-                            int color = srcImg.getRGB(i + x, j + y);
+                            int color = srcImg.getRGB(x, y);
                             int[] channels = ImgUtils.getChannelColor(color);
                             r += 1.0 / (channels[1] + 1);
                             g += 1.0 / (channels[2] + 1);

@@ -41,7 +41,7 @@ public class ReHarmonicFilterProcessor extends ImageProcessor {
                         if(x < 0 || x >= w || y < 0 || y >= h ){
                             continue;
                         }else {
-                            int color = srcImg.getRGB(i + x, j + y);
+                            int color = srcImg.getRGB(x, y);
                             int[] channels = ImgUtils.getChannelColor(color);
                             r += Math.pow(channels[1], q + 1);
                             g += Math.pow(channels[2], q + 1);

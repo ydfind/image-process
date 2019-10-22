@@ -38,7 +38,7 @@ public class GeometryFilterProcessor extends ImageProcessor {
                         if(x < 0 || x >= w || y < 0 || y >= h ){
                             continue;
                         }else {
-                            int color = srcImg.getRGB(i + x, j + y);
+                            int color = srcImg.getRGB(x, y);
                             int[] channels = ImgUtils.getChannelColor(color);
                             r *= channels[1] + 1;
                             g *= channels[2] + 1;
