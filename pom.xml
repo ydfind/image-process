@@ -75,13 +75,13 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.35</version>
         </dependency>
-        <!-- OpenCV -->
-        <dependency>
-            <groupId>org</groupId>
-            <artifactId>opencv</artifactId>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/opencv-411.jar</systemPath>
-        </dependency>
+        <!-- OpenCV太大了，自行引入jar及dll吧 -->
+<!--        <dependency>-->
+<!--            <groupId>org</groupId>-->
+<!--            <artifactId>opencv</artifactId>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/lib/opencv-411.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
