@@ -34,7 +34,7 @@ public class NoiseProcessorTest {
     }
 
     /**
-     * 添加椒盐噪声
+     * 添加高斯噪声
      * @throws IOException 报错
      */
     @Test

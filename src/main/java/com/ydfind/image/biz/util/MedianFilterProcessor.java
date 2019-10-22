@@ -66,7 +66,12 @@ public class MedianFilterProcessor extends ImageProcessor {
         int k = 0;
         for(int i = -1; i < 2; i++){
             for(int j = -1; j < 2; j++){
-                arr[k++] = img.getRGB(getInRange(x + i, 0, w),getInRange( y + j,0, h ));
+//                arr[k++] = img.getRGB(getInRange(x + i, 0, w),getInRange( y + j,0, h ));
+                if(x < 0 || x > w || y < 0 || y > h){
+                    arr[k++] = -1;
+                }else{
+                    arr[k++] = img.getRGB(x, y);
+                }
             }
         }
         return arr;
@@ -102,11 +107,15 @@ public class MedianFilterProcessor extends ImageProcessor {
                 }
                 // rgb处理
                 for (int x = 1; x < 4; x++) {
+                    int count = 0;
                     for (int k = 0; k < colors.length; k++) {
-                        colors[k] = rgbs[k][x];
+//                        colors[k] = rgbs[k][x];
+                        if(rgbs[k][x] >= 0) {
+                            count++;
+                        }
                     }
-                    quickSort(colors, 0, colors.length - 1);
-                    channels[x] = colors[5];
+                    quickSort(colors, colors.length - count, colors.length - 1);
+                    channels[x] = colors[colors.length - count + count / 2];
                 }
                 // 保存
                 int color = ImgUtils.colorToRgb(channels);

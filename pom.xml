@@ -80,7 +80,7 @@
             <groupId>org</groupId>
             <artifactId>opencv</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}\src\main\resources\lib\opencv-411.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/lib/opencv-411.jar</systemPath>
         </dependency>
     </dependencies>
 

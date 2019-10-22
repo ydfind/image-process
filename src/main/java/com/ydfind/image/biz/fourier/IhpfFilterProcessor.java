@@ -44,33 +44,6 @@ public class IhpfFilterProcessor extends FourierProcessor {
         return pixels;
     }
 
-//    public static void process(BufferedImage srcImg, BufferedImage scopeImg, BufferedImage highImg, BufferedImage trgImg,
-//                               FourierHandler FourierHandler){
-//        // 傅里叶正变换
-//        MyComplex[][] dest = DftProcessor.processDftForward(srcImg);
-//        // 频率，并保存傅里叶幅度图片，
-//        int[][] newPixels = FourierHandler.handler(dest);
-//        DftProcessor.saveToImage(srcImg, trgImg, newPixels);
-//        // 傅里叶反变换，并保存图片
-//        DftProcessor.processAndSaveDftReverse(srcImg, newSrcImg, dest);
-//
-//        // 锐化
-//    }
-//
-//    public static void process(String srcFilename, String scopeFilename, String highFilename, String trgFilename,
-//                               FourierHandler FourierHandler) throws IOException {
-//        BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-//        BufferedImage scopeImg = copyImage(srcImg);
-//        BufferedImage highImg = copyImage(srcImg);
-//        BufferedImage trgImg = copyImage(srcImg);
-//
-//        process(srcImg, scopeImg, highImg, trgImg, FourierHandler);
-//
-//        ImgUtils.saveImage(scopeFilename, scopeImg);
-//        ImgUtils.saveImage(highFilename, highImg);
-//        ImgUtils.saveImage(trgFilename, trgImg);
-//    }
-
     public static void process(String srcFilename, String scopeFilename, String trgFilename,
                                int radius, double a) throws IOException {
         process(srcFilename, scopeFilename, trgFilename, (complexes) -> lowFilter(complexes, radius, a));

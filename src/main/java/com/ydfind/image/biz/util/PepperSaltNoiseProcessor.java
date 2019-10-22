@@ -23,8 +23,9 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
      * @param srcImg 原图
      * @param trgImg 目标图像
      * @param param 信噪比
+     * @param type 0椒盐，1椒，2盐
      */
-    public static void addPepperSaltNoise(BufferedImage srcImg, BufferedImage trgImg, double param){
+    public static void addPepperSaltNoise(BufferedImage srcImg, BufferedImage trgImg, double param, int type){
         int total = srcImg.getWidth() * srcImg.getHeight();
         int count = new Double(total * (1 - param)).intValue();
         Random random = new Random();
@@ -33,6 +34,13 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
             int randomY = random.nextInt(srcImg.getHeight());
             int[] channels = ImgUtils.getChannelColor(srcImg, randomX, randomY);
             int newColor = (random.nextInt(2) + 1) % 2 == 0 ? 0 : 255;
+            if(type == 0){
+                newColor = (random.nextInt(2) + 1) % 2 == 0 ? 0 : 255;
+            }else if(type == 1){
+                newColor = 0;
+            }else{
+                newColor = 255;
+            }
             for(int k = ImgUtils.COLOR_CHANNEL_COUNT - 1; k > 0; k--){
                 channels[k] = newColor;
             }
@@ -52,8 +60,22 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
     public static void addPepperSaltNoise(String srcFilename, String trgFilename, double param) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
         BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
-        addPepperSaltNoise(srcImg, trgImg, param);
+        addPepperSaltNoise(srcImg, trgImg, param, 0);
         ImgUtils.saveImage(trgFilename, trgImg);
     }
 
+    /**
+     * 添加椒盐噪声：根据信噪比，随机把点设置为0或1
+     * @param srcFilename 原图
+     * @param trgFilename 目标图像
+     * @param param 信噪比
+     * @param type 0椒盐，1椒，2盐
+     * @throws IOException 报错
+     */
+    public static void addPepperNoise(String srcFilename, String trgFilename, double param, int type) throws IOException {
+        BufferedImage srcImg = ImageIO.read(new File(srcFilename));
+        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        addPepperSaltNoise(srcImg, trgImg, param, type);
+        ImgUtils.saveImage(trgFilename, trgImg);
+    }
 }
