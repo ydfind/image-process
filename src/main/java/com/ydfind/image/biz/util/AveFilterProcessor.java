@@ -89,7 +89,7 @@ public class AveFilterProcessor extends ImageProcessor {
      */
     public static void process(String srcFilename, String trgFilename) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         process(srcImg, trgImg);
         ImgUtils.saveImage(trgFilename, trgImg);
     }

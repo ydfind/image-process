@@ -332,6 +332,17 @@ public class ImgUtils {
         return channels;
     }
 
+    /**
+     * 复制图像
+     * @param img 图像
+     * @return 图像的copy
+     */
+    public static BufferedImage copyImage(BufferedImage img){
+        BufferedImage res = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+        res.setData(img.getData());
+        return res;
+    }
+
     public static void main(String[] args){
         String path = "/update/image.exe";
         System.out.println(getImgNameExcludeExt(path));

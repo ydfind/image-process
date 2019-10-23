@@ -64,8 +64,8 @@ public class BlpfFilterProcessor extends ImageProcessor {
     public static void process(String srcFilename, String trgFilename, String newSrcFilename,
                                int radius, int n) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage fourierImg = copyImage(srcImg);
-        BufferedImage trgImg = copyImage(srcImg);
+        BufferedImage fourierImg = ImgUtils.copyImage(srcImg);
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         process(srcImg, fourierImg, trgImg, radius, n);
         ImgUtils.saveImage(trgFilename, fourierImg);
         ImgUtils.saveImage(newSrcFilename, trgImg);

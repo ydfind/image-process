@@ -78,7 +78,7 @@ public class GaussianNoiseProcessor extends ImageProcessor {
      */
     public static void addGaussianNoise(String srcFilename, String trgFilename, double param) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         addGaussianNoise(srcImg, trgImg, param);
         ImgUtils.saveImage(trgFilename, trgImg);
     }

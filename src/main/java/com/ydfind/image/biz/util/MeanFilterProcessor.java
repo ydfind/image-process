@@ -76,7 +76,6 @@ public class MeanFilterProcessor extends ImageProcessor {
      * @param trgImg 目标图像
      */
     public static void process(BufferedImage srcImg, BufferedImage trgImg){
-//        int[] colors = new int[9];
         int[][] rgbs = new int[9][4];
         for(int i = 0; i < srcImg.getWidth(); i++) {
             for (int j = 0; j < srcImg.getHeight(); j++) {
@@ -109,7 +108,7 @@ public class MeanFilterProcessor extends ImageProcessor {
      */
     public static void process(String srcFilename, String trgFilename) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         process(srcImg, trgImg);
         ImgUtils.saveImage(trgFilename, trgImg);
     }

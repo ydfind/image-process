@@ -18,14 +18,20 @@ import java.util.Random;
 @Service
 public class PepperSaltNoiseProcessor extends ImageProcessor {
 
+    public static final String PEPPER_SALT_NOISE_NAME = "椒盐噪声";
+
+    public static final String PEPPER_NOISE_NAME = "胡椒噪声";
+
+    public static final String SALT_NOISE_NAME = "盐噪声";
+
     /**
      * 添加椒盐噪声：根据信噪比，随机把点设置为0或1
      * @param srcImg 原图
      * @param trgImg 目标图像
      * @param param 信噪比
-     * @param type 0椒盐，1椒，2盐
+     * @param type 椒盐，椒，盐
      */
-    public static void addPepperSaltNoise(BufferedImage srcImg, BufferedImage trgImg, double param, int type){
+    public static void addPepperSaltNoise(BufferedImage srcImg, BufferedImage trgImg, double param, String type){
         int total = srcImg.getWidth() * srcImg.getHeight();
         int count = new Double(total * (1 - param)).intValue();
         Random random = new Random();
@@ -33,10 +39,10 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
             int randomX = random.nextInt(srcImg.getWidth());
             int randomY = random.nextInt(srcImg.getHeight());
             int[] channels = ImgUtils.getChannelColor(srcImg, randomX, randomY);
-            int newColor = (random.nextInt(2) + 1) % 2 == 0 ? 0 : 255;
-            if(type == 0){
+            int newColor;
+            if(PEPPER_SALT_NOISE_NAME.equals(type)){
                 newColor = (random.nextInt(2) + 1) % 2 == 0 ? 0 : 255;
-            }else if(type == 1){
+            }else if(PEPPER_NOISE_NAME.equals(type)){
                 newColor = 0;
             }else{
                 newColor = 255;
@@ -59,8 +65,8 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
      */
     public static void addPepperSaltNoise(String srcFilename, String trgFilename, double param) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
-        addPepperSaltNoise(srcImg, trgImg, param, 0);
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
+        addPepperSaltNoise(srcImg, trgImg, param, PEPPER_SALT_NOISE_NAME);
         ImgUtils.saveImage(trgFilename, trgImg);
     }
 
@@ -72,9 +78,9 @@ public class PepperSaltNoiseProcessor extends ImageProcessor {
      * @param type 0椒盐，1椒，2盐
      * @throws IOException 报错
      */
-    public static void addPepperNoise(String srcFilename, String trgFilename, double param, int type) throws IOException {
+    public static void addNoise(String srcFilename, String trgFilename, double param, String type) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         addPepperSaltNoise(srcImg, trgImg, param, type);
         ImgUtils.saveImage(trgFilename, trgImg);
     }

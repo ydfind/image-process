@@ -251,8 +251,8 @@ public class DftProcessor extends ImageProcessor {
     public static void process(String srcFilename, String trgFilename, String newSrcFilename,
                                int threshold) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = copyImage(srcImg);
-        BufferedImage newSrcImg = copyImage(srcImg);
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
+        BufferedImage newSrcImg = ImgUtils.copyImage(srcImg);
         process(srcImg, trgImg, newSrcImg, threshold);
         ImgUtils.saveImage(trgFilename, trgImg);
         ImgUtils.saveImage(newSrcFilename, newSrcImg);

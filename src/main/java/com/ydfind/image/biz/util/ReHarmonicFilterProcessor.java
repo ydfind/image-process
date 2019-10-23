@@ -18,15 +18,28 @@ import java.io.IOException;
 @Service
 public class ReHarmonicFilterProcessor extends ImageProcessor {
 
+    public static double pow(int a, double b){
+        if(b == 0){
+            return 1;
+        }
+        else if(a == 0){
+            return 0;
+        }else {
+            return Math.pow(a, b);
+        }
+    }
+
     /**
      * 逆谐波均值滤波
      * @param srcImg 原图
      * @param trgImg 目标图像
      * @param q 0算术均值滤波;-1为谐波均值滤波；正,消除胡椒噪声;负，消除盐粒噪声
      */
-    public static void process(BufferedImage srcImg, BufferedImage trgImg, int q) {
+    public static void process(BufferedImage srcImg, BufferedImage trgImg, double q) {
         int w = srcImg.getWidth();
         int h = srcImg.getHeight();
+        double q1 = q + 1;
+        double q2 = q;
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 int[] curChannels = ImgUtils.getChannelColor(srcImg.getRGB(i, j));
@@ -43,18 +56,18 @@ public class ReHarmonicFilterProcessor extends ImageProcessor {
                         }else {
                             int color = srcImg.getRGB(x, y);
                             int[] channels = ImgUtils.getChannelColor(color);
-                            r += Math.pow(channels[1], q + 1);
-                            g += Math.pow(channels[2], q + 1);
-                            b += Math.pow(channels[3], q + 1);
-                            r1 += Math.pow(channels[1], q);
-                            g1 += Math.pow(channels[2], q);
-                            b1 += Math.pow(channels[3], q);
+                            r += pow(channels[1], q1);
+                            g += pow(channels[2], q1);
+                            b += pow(channels[3], q1);
+                            r1 += pow(channels[1], q2);
+                            g1 += pow(channels[2], q2);
+                            b1 += pow(channels[3], q2);
                         }
                     }
                 }
-                r = r1 < 1 ? 0 : r / r1;
-                g = g1 < 1 ? 0 : g / g1;
-                b = b1 < 1 ? 0 : b / b1;
+                r = (r1 == 0) ? 0 : r / r1;
+                g = (g1 == 0) ? 0 : g / g1;
+                b = (b1 == 0) ? 0 : b / b1;
                 curChannels[1] = new Double(r).intValue();
                 curChannels[2] = new Double(g).intValue();
                 curChannels[3] = new Double(b).intValue();
@@ -69,9 +82,9 @@ public class ReHarmonicFilterProcessor extends ImageProcessor {
      * @param trgFilename 目标图像
      * @throws IOException 报错
      */
-    public static void process(String srcFilename, String trgFilename, int q) throws IOException {
+    public static void process(String srcFilename, String trgFilename, double q) throws IOException {
         BufferedImage srcImg = ImageIO.read(new File(srcFilename));
-        BufferedImage trgImg = srcImg.getSubimage(0, 0, srcImg.getWidth(), srcImg.getHeight());
+        BufferedImage trgImg = ImgUtils.copyImage(srcImg);
         process(srcImg, trgImg, q);
         ImgUtils.saveImage(trgFilename, trgImg);
     }
