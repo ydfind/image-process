@@ -19,7 +19,7 @@ import java.util.Random;
 public class GaussianNoiseProcessor extends ImageProcessor {
 
     /**
-     *
+     * 产生高斯序列
      * @param flag 第一次调用应该为false
      * @param z1
      * @return
@@ -32,8 +32,7 @@ public class GaussianNoiseProcessor extends ImageProcessor {
         double z0;
         double u1;
         double u2;
-        do
-        {
+        do {
             u1 = random.nextFloat();
             u2 = random.nextFloat();
         } while (u1 <= Double.MIN_VALUE);

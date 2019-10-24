@@ -204,4 +204,20 @@ public class ImageProcessor {
         });
         return result;
     }
+
+    /**
+     * 二值化图像
+     * @param img
+     * @param threshold 阈值
+     * @return
+     */
+    public static int[][] getImageBinary(BufferedImage img, int threshold){
+        int[][] result = new int[img.getWidth()][img.getWidth()];
+        ImgUtils.traversePngColor(img, (x, y, color, channels) -> {
+            int newColor = new Double((0.3 * channels[1] + 0.59 * channels[2] + 0.11 * channels[3])).intValue();
+            newColor = newColor > threshold ? 255 : 0;
+            result[x][y] = newColor;
+        });
+        return result;
+    }
 }
