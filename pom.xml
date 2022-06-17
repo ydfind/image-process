@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.35</version>
+            <version>1.2.83</version>
         </dependency>
         <!-- OpenCV太大了，自行引入jar及dll吧 -->
 <!--        <dependency>-->
